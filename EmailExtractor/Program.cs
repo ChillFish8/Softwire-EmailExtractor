@@ -8,12 +8,12 @@ namespace EmailExtractor
     {
         static void Main(string[] args)
         {
-            var pattern = args.Length > 0 & args[0] == "--notld"
-                ? @"[\w\-\.]+@(?<domain>[\w\-]+)\.[\w\-\.]+"
-                : @"[\w\-\.]+@(?<domain>[\w\-]+\.[\w\-\.]+)";
-            
+            var withTld = args.Length > 0 & args[0] != "--notld";
             var data = GetData();
-            var regex = new Regex(pattern, RegexOptions.Compiled);
+            var regex = new Regex(
+                @"(?<email>(?<name>(?:[a-z0-9]+[\.\-_]?[a-z0-9]+)+)@(?<domain>[a-z0-9\-]+)(?<tld>(\.[a-z]{2,})+))", 
+                RegexOptions.Compiled | RegexOptions.IgnoreCase
+                );
 
             var matches = regex.Matches(data);
             
@@ -21,6 +21,13 @@ namespace EmailExtractor
             foreach (Match match in matches)
             {
                 var domain = match.Groups["domain"].Value;
+                
+                if (withTld)
+                {
+                    var tld = match.Groups["tld"].Value;
+                    domain = $"{domain}{tld}";
+                }
+                
                 counter.Register(domain);
             }
             
