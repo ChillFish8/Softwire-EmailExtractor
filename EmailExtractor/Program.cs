@@ -10,18 +10,10 @@ namespace EmailExtractor
         {
             Console.WriteLine("Hello World!");
             var data = GetData();
-            var regex = new Regex(@"",  RegexOptions.Compiled);
+            var regex = new Regex(@"\w+@softwire\.com",  RegexOptions.Compiled);
 
-            var counter = 0;
-            for (var i = 0; i < (data.Length - 13); i++)
-            {
-                if (data.Substring(i, 13) == "@softwire.com")
-                {
-                    counter += 1;
-                } 
-            }
-            
-            Console.WriteLine(counter);
+            var matches = regex.Matches(data);
+            Console.WriteLine(matches.Count);
         }
         
         
