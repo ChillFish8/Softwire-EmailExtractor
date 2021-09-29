@@ -10,13 +10,19 @@ namespace EmailExtractor
         {
             Console.WriteLine("Hello World!");
             var data = GetData();
-            var regex = new Regex(@"\w+@softwire\.com",  RegexOptions.Compiled);
+            var regex = new Regex(@"\w+@(?<domain>[\w\-]+\.[\w\-\.]+)",  RegexOptions.Compiled);
 
             var matches = regex.Matches(data);
-            Console.WriteLine(matches.Count);
+            
+            var counter = new Counter();
+            foreach (Match match in matches)
+            {
+                var domain = match.Groups["domain"].Value;
+                counter.Register(domain);
+            }
+            
+            counter.Display();
         }
-        
-        
 
         static string GetData()
         {

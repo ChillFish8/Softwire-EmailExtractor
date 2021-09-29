@@ -68,13 +68,7 @@ namespace EmailExtractor
         /// <param name="countColumnName">A optional count column identifier to put at the header of the table</param>
         public void Display(string keyColumnName = "Key", string countColumnName = "Count")
         {
-            var maxKeyPad = _values
-                .OrderBy(item => item.Key.Length)
-                .Reverse()
-                .First()
-                .Key
-                .Length;
-
+            var maxKeyPad = 0;
             var maxCountPad = 0;
             var maxIndexPad = _values
                 .Count
@@ -88,6 +82,9 @@ namespace EmailExtractor
                 var countValue = value.ToString();
                 if (countValue.Length > maxCountPad)
                     maxCountPad = countValue.Length;
+
+                if (key.Length > maxKeyPad)
+                    maxKeyPad = key.Length;
                 
                 tableLines.Add(Tuple.Create(index.ToString(), key, value.ToString()));
                 
@@ -105,8 +102,8 @@ namespace EmailExtractor
             
             var lineFormat = $"| {{0,-{maxIndexPad}}} | {{1,-{maxKeyPad}}} | {{2,-{maxCountPad}}} |";
 
-            tableLines.Add(Tuple.Create(rowNumberTitle, keyColumnName, countColumnName));            
-
+            tableLines.Insert(0, Tuple.Create(rowNumberTitle, keyColumnName, countColumnName));            
+            
             foreach (var (rowNumber, key, value) in tableLines)
                 Console.WriteLine(lineFormat, rowNumber, key, value);
         }
