@@ -16,7 +16,7 @@ namespace EmailExtractor
             var noTld = commands.Exists("--notld");
             var caseInsensitive = commands.Exists("--caseInsensitive");
             var httpUrl = commands.GetFlagValue("--url");
-
+            
             var data = httpUrl is null ? GetData() : GetUrlData(httpUrl);
             
             var regex = new Regex(

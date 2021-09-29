@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace EmailExtractor
@@ -10,7 +11,7 @@ namespace EmailExtractor
 
         public CommandParser()
         {
-            _regex = new Regex(@"(?<flag>--[\w\-]+)(?: (?<value>[\w\-]+))?", RegexOptions.Compiled);
+            _regex = new Regex(@"(?<flag>--[\w\-]+)(?: (?<value>(?:[\w\-]+).|(?:"".+"")))?", RegexOptions.Compiled);
             _values = new Dictionary<string, string?>();
         }
 
@@ -26,16 +27,30 @@ namespace EmailExtractor
 
         public void ParseArgs(string[] args)
         {
-            var cliArgs = string.Concat(args);
-            var matches = _regex.Matches(cliArgs);
-            foreach (Match match in matches)
+
+            string? currentFlag = null;
+            var expectingFlag = true;
+            foreach (var match in args)
             {
-                var flag = match.Groups["flag"].Value;
+                if (!match.StartsWith("--") & expectingFlag)
+                    continue;
+                
+                if (match.StartsWith("--"))
+                {
+                    if (currentFlag is not null)
+                        _values[currentFlag] = null;
 
-                var valueGroup = match.Groups["value"];
-                var value = valueGroup.Success ? valueGroup.Value : null;
+                    currentFlag = match;
+                    expectingFlag = false;
+                    continue;
+                }
+                
+                if (currentFlag is null) 
+                    continue;
 
-                _values[flag] = value;
+                expectingFlag = true;
+
+                _values[currentFlag] = match;
             }
         }
     }
