@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailExtractor", "EmailExtractor\EmailExtractor.csproj", "{811E0940-0F94-46A0-8B2C-D168BBD70A03}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{F73C3CC0-2E5A-44CE-8133-63ED08B744ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{811E0940-0F94-46A0-8B2C-D168BBD70A03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{811E0940-0F94-46A0-8B2C-D168BBD70A03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{811E0940-0F94-46A0-8B2C-D168BBD70A03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F73C3CC0-2E5A-44CE-8133-63ED08B744ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F73C3CC0-2E5A-44CE-8133-63ED08B744ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F73C3CC0-2E5A-44CE-8133-63ED08B744ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F73C3CC0-2E5A-44CE-8133-63ED08B744ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
