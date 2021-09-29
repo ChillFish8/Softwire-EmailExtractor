@@ -34,14 +34,14 @@ namespace EmailExtractor
                 _values[key] = 1;
         }
 
-        /// <summary>
-        /// Gets the given amount of times the key appears in the collection.
-        /// </summary>
-        /// <param name="key">The target key.</param>
-        /// <returns>The number of times the key appears in the collection.</returns>
-        public int GetCount(string key)
+        private IEnumerable<KeyValuePair<string, int>> GetAppearingDomains(int minimumFrequency)
         {
-            return _values.ContainsKey(key) ? _values[key] : 0;
+            var domains = _values
+                .OrderBy(item => item.Value)
+                .Reverse()
+                .Where(item => item.Value > minimumFrequency);
+
+            return domains;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace EmailExtractor
         /// </summary>
         /// <param name="n">The number of items to return.</param>
         /// <returns>A enumerable containing the key, count pairs.</returns>
-        public IEnumerable<KeyValuePair<string, int>> GetTopN(int n)
+        private IEnumerable<KeyValuePair<string, int>> GetTopN(int n)
         {
             var i = 0;
             var processed = _values
@@ -64,9 +64,24 @@ namespace EmailExtractor
         /// <summary>
         /// Displays the collection as a formatted table.
         /// </summary>
+        /// <param name="limit">An optional amount to get the top n items and present them in table form.</param>
         /// <param name="keyColumnName">A optional key column identifier to put at the header of the table.</param>
         /// <param name="countColumnName">A optional count column identifier to put at the header of the table</param>
-        public void Display(string keyColumnName = "Key", string countColumnName = "Count")
+        public void Display(int? limit = null, string keyColumnName = "Key", string countColumnName = "Count")
+        {
+            var topN = limit ?? _values.Count;
+            var results = GetTopN(topN);
+            RenderDisplay(keyColumnName, countColumnName, results);
+        }
+
+        public void DisplayAppearingDomains(int minimumFrequency, string keyColumnName = "Key",
+            string countColumnName = "Count")
+        {
+            var results = GetAppearingDomains(minimumFrequency);
+            RenderDisplay(keyColumnName, countColumnName, results);
+        }
+
+        private void RenderDisplay(string keyColumnName, string countColumnName, IEnumerable<KeyValuePair<string, int>> results)
         {
             var maxKeyPad = 0;
             var maxCountPad = 0;
@@ -74,10 +89,10 @@ namespace EmailExtractor
                 .Count
                 .ToString()
                 .Length;
-
+            
             var tableLines = new List<Tuple<string, string, string>>();
             var index = 1;
-            foreach (var (key, value) in GetTopN(_values.Count))
+            foreach (var (key, value) in results)
             {
                 var countValue = value.ToString();
                 if (countValue.Length > maxCountPad)
@@ -106,6 +121,7 @@ namespace EmailExtractor
             
             foreach (var (rowNumber, key, value) in tableLines)
                 Console.WriteLine(lineFormat, rowNumber, key, value);
+
         }
     }
 }

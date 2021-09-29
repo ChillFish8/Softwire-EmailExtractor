@@ -20,7 +20,9 @@ namespace EmailExtractor
                 counter.Register(domain);
             }
             
-            counter.Display();
+            counter.Display(10);
+            Console.WriteLine("");
+            counter.DisplayAppearingDomains(89);
         }
 
         static string GetData()
